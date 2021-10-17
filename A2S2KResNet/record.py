@@ -2,12 +2,27 @@ import numpy as np
 import torch
 from operator import truediv
 
-def evaluate_accuracy(data_iter, net, loss, device):
+def change_brightness(image, alpha, beta):
+  new_image = np.zeros(image.shape, np.int64)
+  new_image = np.clip(alpha*image, 0, 255)
+  return new_image
+
+def add_noise(X):
+
+  images = X.detach().numpy()
+  nchannel = X.shape[-1]
+  noise_matrix = np.random.uniform(low=0.0, high=1.0, size=(nchannel,))
+  images = images*noise_matrix    
+  return torch.tensor(images)
+
+def evaluate_accuracy(data_iter, net, loss, device, add_noise=True):
     acc_sum, n = 0.0, 0
     with torch.no_grad():
         for X, y in data_iter:
             test_l_sum, test_num = 0, 0
             #X = X.permute(0, 3, 1, 2)
+            if add_noise:
+                X = add_noise(X)
             X = X.to(device)
             y = y.to(device)
             net.eval() 
