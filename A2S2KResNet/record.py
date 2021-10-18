@@ -15,13 +15,13 @@ def add_noise(X):
   images = images*noise_matrix    
   return torch.tensor(images)
 
-def evaluate_accuracy(data_iter, net, loss, device, add_noise=True):
+def evaluate_accuracy(data_iter, net, loss, device, attack=True):
     acc_sum, n = 0.0, 0
     with torch.no_grad():
         for X, y in data_iter:
             test_l_sum, test_num = 0, 0
             #X = X.permute(0, 3, 1, 2)
-            if add_noise:
+            if attack:
                 X = add_noise(X)
             X = X.to(device)
             y = y.to(device)
