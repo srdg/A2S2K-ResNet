@@ -13,7 +13,7 @@ def add_noise(X):
   nchannel = X.shape[-1]
   noise_matrix = np.random.uniform(low=0.0, high=1.0, size=(nchannel,))
   images = images*noise_matrix    
-  return torch.tensor(images)
+  return torch.tensor(images.astype(np.float32))
 
 def evaluate_accuracy(data_iter, net, loss, device, attack=True):
     acc_sum, n = 0.0, 0
