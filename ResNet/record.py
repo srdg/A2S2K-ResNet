@@ -2,12 +2,22 @@ import numpy as np
 import torch
 from operator import truediv
 
-def evaluate_accuracy(data_iter, net, loss, device):
+def add_noise(X):
+
+  images = X.detach().numpy()
+  nchannel = X.shape[-1]
+  noise_matrix = np.random.uniform(low=0.0, high=1.0, size=(nchannel,))
+  images = images*noise_matrix    
+  return torch.tensor(images.astype(np.float32))
+
+def evaluate_accuracy(data_iter, net, loss, device, attack=True):
     acc_sum, n = 0.0, 0
     with torch.no_grad():
         for X, y in data_iter:
             test_l_sum, test_num = 0, 0
             X = X.permute(0, 3, 1, 2)
+            if attack:
+                X = add_noise(X)
             X = X.to(device)
             y = y.to(device)
             net.eval() 
