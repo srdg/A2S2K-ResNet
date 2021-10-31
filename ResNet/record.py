@@ -15,7 +15,7 @@ def evaluate_accuracy(data_iter, net, loss, device, attack=True):
     with torch.no_grad():
         for X, y in data_iter:
             test_l_sum, test_num = 0, 0
-#             X = X.permute(0, 3, 1, 2)
+            X = X.permute(0, 3, 1, 2)
             if attack:
                 X = add_noise(X)
             X = X.to(device)
